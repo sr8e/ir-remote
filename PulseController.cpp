@@ -32,7 +32,7 @@ PulseController::PulseController(int gpio):m_gpio(gpio) {
     std::this_thread::sleep_for(milliseconds(10));
 }
 
-void PulseController::write(ir::Format fmt, std::vector<uint8_t> data) {
+void PulseController::write(ir::Format fmt, std::vector<uint8_t> data, bool end) {
     // leader
     auto t = system_clock::now();
     write_pulse(1, fmt.T * fmt.leader_on);
@@ -43,7 +43,7 @@ void PulseController::write(ir::Format fmt, std::vector<uint8_t> data) {
     for(uint8_t byte: data) {
         for(int i = 0; i < 8; i++) {
             int shift = fmt.lsb_first ? i : (7 - i);
-            if ((byte >> i) & 1) {
+            if ((byte >> shift) & 1) {
                 write_pulse(1, fmt.T * fmt.data_1_on);
                 write_pulse(0, fmt.T * fmt.data_1_off);
             } else {
@@ -53,10 +53,12 @@ void PulseController::write(ir::Format fmt, std::vector<uint8_t> data) {
         }
     }
 
-    // stop bit & wait for enough time.
+    // stop bit
     write_pulse(1, fmt.T * fmt.stop);
-    pwmWrite(m_gpio, 0);
-    std::this_thread::sleep_for(milliseconds(150));
+    if (end) {
+        pwmWrite(m_gpio, 0);
+        std::this_thread::sleep_for(milliseconds(150));
+    }
 }
 
 void PulseController::write_pulse(int level, int dur_us) {

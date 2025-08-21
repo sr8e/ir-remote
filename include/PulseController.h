@@ -10,9 +10,11 @@
 class PulseController {
 public:
     PulseController(int gpio);
-    void write(ir::Format fmt, std::vector<uint8_t> data);
-private:
+    // convenient interface
+    void write(ir::Format fmt, std::vector<uint8_t> data, bool end = true);
+    // low-level control
     void write_pulse(int level, int dur);
+private:
     
     int m_gpio;  // output pin (gpio)
 };

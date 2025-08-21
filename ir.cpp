@@ -7,6 +7,7 @@
 
 #include "PulseController.h"
 #include "Ceiling.h"
+#include "Aircon.h"
 
 void debug() {
     // exported arm peripheral clk/pwm memory region
@@ -45,7 +46,8 @@ int main(int argc, char* argv[]) {
         Ceiling ceiling(pc);
         ceiling.invoke(args);
     } else if (device == "aircon") {
-
+        Aircon aircon(pc);
+        aircon.invoke(args);
     } else if (device == "debug") {
         debug();
     } else {

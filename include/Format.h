@@ -16,6 +16,7 @@ namespace ir {
     };
 
     static constexpr Format NEC_FORMAT{562, 16, 8, 1, 1, 1, 3, 1, true};
+    static constexpr Format TOSHIBA_AIRCON{490, 9, 9, 1, 1, 1, 3, 1, false};
 }
 
 #endif
